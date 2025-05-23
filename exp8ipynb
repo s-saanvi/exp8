@@ -1,0 +1,31 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load and prepare data
+data = load_breast_cancer()
+X, y = data.data, data.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+clf = DecisionTreeClassifier().fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+
+# Evaluation
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+print(classification_report(y_test, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Plot tree
+plt.figure(figsize=(20,10))
+plot_tree(clf, feature_names=data.feature_names, class_names=data.target_names, filled=True)
+plt.show()
+
+# Prediction for new sample
+sample = [X[0]]
+pred = clf.predict(sample)
+print(f"Predicted class: {data.target_names[pred[0]]}")
